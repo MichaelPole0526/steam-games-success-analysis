@@ -77,7 +77,7 @@
 
 ## Visualizations
 ### Metacritic Score vs. Log Success
-![Metacritic Score vs. Log Success](figures/metacritic_score_vs_log_success_score.png)
+![Metacritic Score vs. Log Success](figures/metacritic_score_vs_log_success_score.png.png)
 
 
 ## Limitations
