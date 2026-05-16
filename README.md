@@ -77,7 +77,7 @@
 
 ## Visualizations
 ### Metacritic Score VS. Success Score
-![image alt](Figures/metacritic_score_vs_log_success.png
+![image alt](Figures/metacritic_score_vs_log_success.png)
 ### User Score VS. Success Scorer
 ![image alt](Figures/User Score VS log success score.png)
 ### Metacritic Score vs. User Score 
