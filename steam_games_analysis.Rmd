@@ -1,0 +1,305 @@
+---
+title: "FinalProject2"
+author: "Augie Jones, Mikey Pole and Luis Jiang"
+date: "2026-05-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(broom)
+games <- read.csv("data/games_march2025_cleaned.csv")
+
+```
+
+## Set up
+
+```{r}
+games <- games |>
+  filter(metacritic_score > 0, price > 0, median_playtime_forever > 0, average_playtime_forever > 0)
+games <- games |>
+  mutate(success_score = num_reviews_total * price, log_success = log(success_score))
+
+nrow(games)
+
+median(games$metacritic_score)
+median(games$pct_pos_total)
+```
+
+## Sample Description
+
+```{r}
+ggplot(data = games, aes(x = price)) +
+  geom_histogram(alpha = 0.3, col = "black", binwidth = 1) +
+  geom_vline(xintercept = mean(games$price, na.rm = T), col = "blue", size = 1.5) +
+  geom_vline(xintercept = median(games$price, na.rm = T), col = "red", size = 1.5)
+```
+
+```{r}
+ggplot(data = games, aes(x = metacritic_score)) +
+  geom_histogram(alpha = 0.3, col = "black", binwidth = 1) +
+  geom_vline(xintercept = mean(games$metacritic_score, na.rm = T), col = "blue", size = 1.5) +
+  geom_vline(xintercept = median(games$metacritic_score, na.rm = T), col = "red", size = 1.5)
+```
+
+```{r}
+ggplot(data = games, aes(x = pct_pos_total)) +
+  geom_histogram(alpha = 0.3, col = "black", binwidth = 1) +
+  geom_vline(xintercept = mean(games$pct_pos_total, na.rm = T), col = "blue", size = 1.5) +
+  geom_vline(xintercept = median(games$pct_pos_total, na.rm = T), col = "red", size = 1.5)
+```
+
+```{r}
+ggplot(data = games, aes(x = median_playtime_forever)) +
+  geom_histogram(alpha = 0.3, col = "black") +
+  geom_vline(xintercept = mean(games$median_playtime_forever, na.rm = T), col = "blue", size = 1.5) +
+  geom_vline(xintercept = median(games$median_playtime_forever, na.rm = T), col = "red", size = 1.5)
+
+ggplot(data = games, aes(x = average_playtime_forever)) +
+  geom_histogram(alpha = 0.3, col = "black") +
+  geom_vline(xintercept = mean(games$average_playtime_forever, na.rm = T), col = "blue", size = 1.5) +
+  geom_vline(xintercept = median(games$average_playtime_forever, na.rm = T), col = "red", size = 1.5)
+
+ggplot(data = games, aes(x = success_score)) +
+  geom_histogram(alpha = 0.3, col = "black") +
+  geom_vline(xintercept = mean(games$success_score, na.rm = T), col = "blue", size = 1.5) +
+  geom_vline(xintercept = median(games$success_score, na.rm = T), col = "red", size = 1.5)
+```
+
+## Question 1
+
+```{r}
+m_meta <- lm(log_success ~ metacritic_score, data = games)
+glance(m_meta)
+plot(m_meta)
+
+m_user <- lm(log_success ~ pct_pos_total, data = games)
+glance(m_user)
+plot(m_user)
+
+ggplot(data = games, aes(x = metacritic_score, y = log_success)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+ggplot(data = games, aes(x= pct_pos_total, y = log_success)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = F)
+```
+
+## Question 2
+
+```{r}
+m_combined <- lm(log_success ~ metacritic_score + pct_pos_total, data = games)
+glance(m_combined)
+plot(m_combined)
+```
+
+
+
+## Question 3
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# grepl(pattern, x) returns TRUE/FALSE for each element of x —
+# TRUE when the pattern appears in the string. Not covered in the notes,
+# but it's the minimal tool needed to check "does this game's genres
+# field mention Action?" etc.
+
+# Step 1: add one TRUE/FALSE column per genre using mutate()
+games <- games |>
+  mutate(
+    is_action     = grepl("Action",     genres),
+    is_adventure  = grepl("Adventure",  genres),
+    is_casual     = grepl("Casual",     genres),
+    is_indie      = grepl("Indie",      genres),
+    is_rpg        = grepl("RPG",        genres),
+    is_simulation = grepl("Simulation", genres),
+    is_strategy   = grepl("Strategy",   genres),
+    is_sports     = grepl("Sports",     genres),
+    is_racing     = grepl("Racing",     genres)
+  )
+
+# Step 2 & 3 combined: for each genre, filter to games in that genre,
+# then summarize. Build one row per genre with data.frame() and c().
+# This uses only filter(), mean(), median(), and the pipe — all in the notes.
+
+action_games     <- games |> filter(is_action)
+adventure_games  <- games |> filter(is_adventure)
+casual_games     <- games |> filter(is_casual)
+indie_games      <- games |> filter(is_indie)
+rpg_games        <- games |> filter(is_rpg)
+simulation_games <- games |> filter(is_simulation)
+strategy_games   <- games |> filter(is_strategy)
+sports_games     <- games |> filter(is_sports)
+racing_games     <- games |> filter(is_racing)
+
+genre_summary <- data.frame(
+  genre = c("Action", "Adventure", "Casual", "Indie", "RPG",
+            "Simulation", "Strategy", "Sports", "Racing"),
+  n = c(
+    length(action_games$success_score),
+    length(adventure_games$success_score),
+    length(casual_games$success_score),
+    length(indie_games$success_score),
+    length(rpg_games$success_score),
+    length(simulation_games$success_score),
+    length(strategy_games$success_score),
+    length(sports_games$success_score),
+    length(racing_games$success_score)
+  ),
+  mean_success = c(
+    mean(action_games$success_score,     na.rm = TRUE),
+    mean(adventure_games$success_score,  na.rm = TRUE),
+    mean(casual_games$success_score,     na.rm = TRUE),
+    mean(indie_games$success_score,      na.rm = TRUE),
+    mean(rpg_games$success_score,        na.rm = TRUE),
+    mean(simulation_games$success_score, na.rm = TRUE),
+    mean(strategy_games$success_score,   na.rm = TRUE),
+    mean(sports_games$success_score,     na.rm = TRUE),
+    mean(racing_games$success_score,     na.rm = TRUE)
+  ),
+  median_success = c(
+    median(action_games$success_score,     na.rm = TRUE),
+    median(adventure_games$success_score,  na.rm = TRUE),
+    median(casual_games$success_score,     na.rm = TRUE),
+    median(indie_games$success_score,      na.rm = TRUE),
+    median(rpg_games$success_score,        na.rm = TRUE),
+    median(simulation_games$success_score, na.rm = TRUE),
+    median(strategy_games$success_score,   na.rm = TRUE),
+    median(sports_games$success_score,     na.rm = TRUE),
+    median(racing_games$success_score,     na.rm = TRUE)
+  )
+)
+
+genre_summary
+
+# Step 4: plot. The notes only show geom_point, geom_histogram,
+# geom_boxplot, geom_bar, geom_density. For a bar chart from a
+# summary table, geom_col is the natural fit, but it's not in the notes.
+# A clean alternative: just use geom_point — same information, and
+# geom_point IS in the notes (section 2.4.1).
+ggplot(data = genre_summary, aes(x = genre, y = mean_success)) +
+  geom_point()
+```
+
+```{r}
+m_genre <- lm(log_success ~ is_action + is_adventure + is_casual +
+                            is_indie + is_rpg + is_simulation +
+                            is_strategy + is_sports + is_racing,
+              data = games)
+plot(m_genre)
+```
+
+```{r}
+tidy(m_genre)
+glance(m_genre)
+```
+
+## Question 4
+
+```{r}
+m_price <- lm(log_success ~ price, data = games)
+plot(m_price)
+```
+
+```{r}
+cor(games$price, games$log_success, use = "complete.obs")
+tidy(lm(log_success ~ price, data = games))
+glance(lm(log_success ~ price, data = games))
+ggplot(games, aes(price, log_success)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "Q4: Price vs. log(success score)",
+       x = "Price (USD)", y = "Success score (log scale)")
+```
+
+Since price appears in success_score by construction, I also checked the relationship using just review count as the outcome. 
+
+```{r}
+games <- games |>
+  mutate(log_num_reviews = log(num_reviews_total))
+tidy(lm(log_num_reviews ~ price, data = games))
+glance(lm(log_num_reviews ~ price, data = games))
+
+cor(games$price, games$log_num_reviews, use = "complete.obs")
+ggplot(games, aes(price, log_num_reviews)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "Q4: Price vs. log(number of reviews)",
+       x = "Price (USD)", y = "Number of reviews (log scale)")
+```
+
+
+## Question 5
+
+```{r}
+games <- games |>
+  mutate(log_median_playtime = log(median_playtime_forever))
+
+games <- games |>
+  mutate(log_average_playtime = log(average_playtime_forever))
+
+m4 <- lm(log_success ~ log_median_playtime, data = games)
+g4 <- glance(m4)
+g4$adj.r.squared
+
+plot(m4)
+m5 <- lm(log_success ~ log_average_playtime, data = games)
+g5 <- glance(m5)
+g5$adj.r.squared
+
+plot(m5)
+
+ggplot(data = games, aes(x= log_median_playtime, y = log_success)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = F)
+ggplot(data = games, aes(x= log_average_playtime, y = log_success)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = F)
+```
+
+## Question 6
+
+```{r}
+games <- games |>
+  mutate(
+    is_multiplayer = grepl("Multi-player", categories) & !is.na(categories),
+    player_mode = if_else(is_multiplayer, "Multiplayer", "Single-player")
+  )
+
+games |>
+  count(player_mode)
+
+ggplot(data = games, aes(x = player_mode, y = log_success, fill = player_mode)) +
+  geom_boxplot(alpha = 0.7) +
+  xlab("Player mode") +
+  ylab("Log of success score")
+
+plot(lm(log_success ~ player_mode, data = games))
+
+# Welch's t-test on log scale
+t_res <- t.test(log_success ~ player_mode, data = games)
+t_res
+```
+
+## Question 7 
+
+```{r}
+games <- games |>
+  mutate(price_efficiency = median_playtime_forever/price)
+
+games <- games |>
+  mutate(log_price_efficiency = log(price_efficiency))
+
+
+cor(games$success_score, games$price_efficiency, method = "spearman", use = "complete.obs")
+# 0.07304141
+# Because it is close to 0, it suggests that there is almost no monotonic relationship between the success_score and price_efficiency
+
+ggplot(data = games, aes(x = log_price_efficiency, y = log_success)) +
+  geom_point()+
+  geom_smooth(method = "lm", se = F)
+```
