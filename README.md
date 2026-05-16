@@ -75,6 +75,11 @@
 - Multiplayer games had higher average log success scores than single-player games.
 - Price efficiency had little meaningful relationship with success.
 
+## Visualizations
+### Metacritic Score vs. Log Success
+![Metacritic Score vs. Log Success](figures/metacritic_score_vs_log_success_score.png)
+
+
 ## Limitations
 
 - The price effect should be interpreted carefully because price is part of the success score formula.
