@@ -80,11 +80,40 @@
 ![image alt](Figures/metacritic_score_vs_log_success.png)
 ### User Score VS. Success Scorer
 ![image alt](Figures/metacritic_score_vs_log_success.png)
-### Metacritic Score vs. User Score 
+### Metacritic Score VS. User Score 
 ![image alt](Figures/metacritic_score_VS_user_review.png)
 ### Combining Both Predictors
 ![image_alt](Figures/Combined_two_predictor.png)
+### Genre Effects on Success
+![image_alt](Figures/Genre_effects_on_log_success.png)
+### Higher Price Correlates With Greater Success
+![image_alt](Figures/higher_price_correlates_with_greater_success.png)
+- Pearson's r: 0.639
+- Slope (per $): 0.114
+- Std. Error: 0.003
+- P-value: < 0.001
+- Adjusted R²: 0.408
+### Higher Price Correlates With More Reviews
+![image_alt](Figures/higher_price_correlates_with_more_reviews.png)
+- Pearson's r: 0.404
+- Slope (per $): 0.059
+- Std. Error: 0.003
+- P-value: < 0.001
+- Adjusted R²: 0.163
+- Likely reflects budget-quality correlation.
 
+### Median Playtime VS. Success Score
+![image_alt](Figures/median_playtime_vs_success_score.png)
+- Adjusted r square of log median playtime as predictor of success is 0.2155027
+### Average Playtime VS. Success Score
+![image_alt](Figures/average_playtime_vs_success_socre.png)
+- Adjusted r square of log average playtime as predictor of success is 0.3785012
+### Multiplayer games beats Single-player games
+![image_alt](Figures/multiplayer_game_beast_single_player_1.png)
+![image_alt](Figures/multiplayer_game_beast_single_player_2.png)
+### Price Efficiency Has Very Little Correlation With Success
+![image_alt](Figures/price_efficiency_have_very_little_correlation_with_success.png)
+- Spearman’s ρ: 0.073
 ## Limitations
 
 - The price effect should be interpreted carefully because price is part of the success score formula.
