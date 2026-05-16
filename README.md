@@ -81,7 +81,7 @@
 ### User Score VS. Success Scorer
 ![image alt](Figures/metacritic_score_vs_log_success.png)
 ### Metacritic Score vs. User Score 
-![image alt](Figures/metacritic_vs_log_success.png.png)
+![image alt](Figures/metacritic_score_VS_user_review.png)
 ### Combining Both Predictors
 ![image_alt](Figures/Combined_two_predictor.png)
 
