@@ -76,8 +76,14 @@
 - Price efficiency had little meaningful relationship with success.
 
 ## Visualizations
-### Metacritic Score vs. Log Success
+### Metacritic Score VS. Success Score
+![image alt](Figures/metacritic score vs log success.png)
+### User Score VS. Success Scorer
+![image alt](Figures/User Score VS log success score.png)
+### Metacritic Score vs. User Score 
 ![image alt](Figures/metacritic_vs_log_success.png.png)
+### Combining Both Predictors
+![image_alt](Figures/Combined two predictor.png)
 
 ## Limitations
 
