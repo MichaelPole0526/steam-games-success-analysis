@@ -77,7 +77,7 @@
 
 ## Visualizations
 ### Metacritic Score vs. Log Success
-![Metacritic Score vs. Log Success](figures/metacritic_score_vs_log_success_score.png.png)
+![image alt]([figures/metacritic_score_vs_log_success_score.png.png](https://github.com/MichaelPole0526/steam-games-success-analysis/blob/fb99edd944708b4cc227c7c1b424bdb4eba9ed10/Figures/metacritic_vs_log_success.png.png))
 
 
 ## Limitations
